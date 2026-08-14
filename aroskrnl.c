@@ -62,7 +62,7 @@ void taskB(void)
     DDRB |= (1 << PB4);
     while (1) 
     {
-        PORTB ^= (1 << PB4);     // toggle another pin with more time duration
+        PORTB ^= (1 << PB4);     //toggle another pin
         for (volatile long i = 0; i < 8000; i++);  //delay a bit more
     }
 }
