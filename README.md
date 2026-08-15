@@ -18,6 +18,23 @@ the task function's address where the return-from-interrupt instruction
 expects it. The normal restore path then "resumes" a task that never
 actually ran.
 
+## Crash detection
+
+The ATmega328P has no MMU or MPU, so nothing traps a stack overflow.
+The kernel detects it in software on every timer tick, two ways:
+
+- **Stack pointer bounds** — SP is compared against the task's stack
+  base plus a guard margin. This fires before memory outside the stack
+  is touched, so the offending task can be killed while the rest of the
+  system keeps running.
+- **Canary bytes** — a 0x55/0xAA pattern painted at the low end of each
+  stack. A broken canary means corruption has already happened, so the
+  kernel resets rather than trying to continue.
+
+Either way a crash record (task ID, stack pointer, cause) is written to
+a `.noinit` section that survives reset, the watchdog is armed, and the
+next boot reads the record and reports it over UART at 9600 baud.
+
 ## Build & flash
 
 Tested on Windows 10, ATmega328P (Arduino UNO), 16 MHz.
