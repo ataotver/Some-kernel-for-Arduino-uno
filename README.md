@@ -33,14 +33,14 @@ at different rates, at the same time.
 
 ## Known limitations
 
-- Only two tasks, hardcoded (no dynamic task table yet).
-- Fixed stack size per task; no overflow detection.
-- No memory protection — a task's stray pointer can corrupt another's
+- Only three tasks, hardcoded (no dynamic task table yet), though its configurable.
+- Fixed stack size per task; partial overflow detection.
+- Partial memory — a task's stray pointer can still corrupt another's
   stack silently (the ATmega328P has no MMU).
 - The initial task launch in `main` relies on compiler behaviour that
   isn't guaranteed; robust would be a dedicated asm launch routine.
 
 ## Planned next
 
-- Task table with real IDs, dynamic add/remove.
+- Dynamic add/remove tasks.
 - Priority-based scheduling.
